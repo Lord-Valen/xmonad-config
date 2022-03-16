@@ -393,7 +393,7 @@ myKeymap = [
   ("M-a e", spawn (myEmacs ++ ("--eval '(eshell)'"))), -- eshell
   ("M-a f", spawn (myEmacs ++ ("--eval '(elfeed)'"))), -- elfeed
   ("M-a w", spawn (myEmacs ++ ("--eval '(eww)'"))), -- emacs web wowser
-  ("M-a i", spawn (myEmacs ++ ("--eval '(circe)'"))) -- emacs irc client
+  ("M-a i", spawn (myEmacs ++ ("--eval '(circe)'"))), -- emacs irc client
   {-
   ,
   ("M-a b", spawn (myEmacs ++ ("--eval '(ibuffer)'"))), -- list buffers
@@ -402,6 +402,10 @@ myKeymap = [
   ("M-a v", spawn (myEmacs ++ ("--eval '(+vterm/here nil)'"))), -- vterm
   ("M-a a", spawn (myEmacs ++ ("--eval '(emms)' --eval '(emms-play-directory-tree \"~/Music/\")'")))
   -}
+
+  -- KB_GROUP XF86
+  ("<XF86AudioMute>", spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle"),
+  ("<XF86AudioMicMute>", spawn "pactl set-source-mute @DEFAULT_SOURCE@ toggle")
   ]
   -- The following lines are needed for named scratchpads.
   where
