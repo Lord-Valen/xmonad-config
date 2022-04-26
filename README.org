@@ -125,6 +125,7 @@ myStartupHook = do
   return () >> checkKeymap myConfig myKeymap
   spawnOnce "lxsession &"
   spawnOnce "picom &"
+  spawnOnce "xscreensaver -no-splash"
   spawnOnce "nm-applet &"
   spawnOnce "volumeicon &"
   spawnOnce "conky -c $HOME/.config/conky/xmonad/doom-one-01.conkyrc"
