@@ -132,13 +132,15 @@ windowCount :: X (Maybe String)
 windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
 
 -- Status Bar
-myPP = def { ppCurrent = xmobarColor color06 "" . wrap ("<box type=Bottom width=2 mb=2 color=" ++ color06 ++ ">") "</box>"
+myPP = def { ppCurrent = xmobarColor color06 ""
+                         . wrap ("<box type=Bottom width=2 mb=2 color=" ++ color06 ++ ">") "</box>"
              -- Visible but not current workspace
-           , ppVisible = xmobarColor color06 "" . clickable
+           , ppVisible = xmobarColor color06 ""
              -- Hidden workspace
-           , ppHidden = xmobarColor color05 "" . wrap ("<box type=Top width=2 mt=2 color=" ++ color05 ++ ">") "</box>" . clickable
+           , ppHidden = xmobarColor color05 ""
+                        . wrap ("<box type=Top width=2 mt=2 color=" ++ color05 ++ ">") "</box>"
              -- Hidden workspaces (no windows)
-           , ppHiddenNoWindows = xmobarColor color05 "" . clickable
+           , ppHiddenNoWindows = xmobarColor color05 ""
              -- Title of active window
            , ppTitle = xmobarColor color16 "" . shorten 60
              -- Separator character
@@ -148,7 +150,7 @@ myPP = def { ppCurrent = xmobarColor color06 "" . wrap ("<box type=Bottom width=
              -- Adding # of windows on current workspace to the bar
            , ppExtras = [windowCount]
              -- order of things in xmobar
-           , ppOrder = \(ws:l:t:ex) -> [ws,l]++ex++[t]
+           , ppOrder = \(ws:l:t:ex) -> [ws,l] ++ ex ++ [t]
            }
 
 barSpawner :: ScreenId -> IO StatusBarConfig
@@ -272,14 +274,8 @@ myLayoutHook = avoidStruts $ mouseResize $ windowArrange $ mkToggle (NBFULL ?? N
                       ||| threeRow
 #+END_SRC
 * Workspaces
-Workspaces are clickable. This requires =xdotool=.
-You need to use =UnsafeStdInReader= instead of =StdInReader= in your xmobar config.
 #+begin_src haskell
 myWorkspaces = [" sys ", " doc ", " www ", " dev ", " cht ", " vms ", " mus ", " vid ", " gfx "]
-myWorkspaceIndices = M.fromList $ zip myWorkspaces [1..]
-
-clickable ws = "<action=xdotool key super+"++show i++">"++ws++"</action>"
-  where i = fromJust $ M.lookup ws myWorkspaceIndices
 #+END_SRC
 * ManageHook
 #+BEGIN_SRC haskell
