@@ -37,12 +37,11 @@ import Data.Monoid
 import qualified Data.Map as M
 
 -- Hooks
-import XMonad.Hooks.DynamicLog (dynamicLogWithPP, wrap, xmobarPP, xmobarColor, shorten, PP(..))
 import XMonad.Hooks.EwmhDesktops  -- for some fullscreen events, also for xcomposite in obs.
 import XMonad.Hooks.ManageDocks (avoidStruts, docks, manageDocks, ToggleStruts(..))
 import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat, doCenterFloat)
-import XMonad.Hooks.StatusBar.PP (filterOutWsPP)
---import XMonad.Hooks.StatusBar
+import XMonad.Hooks.StatusBar
+import XMonad.Hooks.StatusBar.PP (filterOutWsPP, xmobarPP, dynamicLogWithPP)
 
 -- Layouts
 import XMonad.Layout.GridVariants (Grid(Grid))
@@ -106,12 +105,12 @@ myFocusColor  = "#46d9ff"   -- Border color of focused windows
 
 windowCount :: X (Maybe String)
 windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
-{-Uncomment after Nix switch
-mySB = statusBarProp "xmobar ~/.config/xmobar/xmobarrc"
 
-barSpawner :: screenId -> IO StatusBarConfig
-barSpawner = pure $ mySB
--}
+-- Status Bar
+barSpawner :: ScreenId -> IO StatusBarConfig
+barSpawner 0 = pure $ statusBarProp "xmobar -x 0 ~/.config/xmobar/xmobarrc" (pure xmobarPP)
+barSpawner 1 = pure $ statusBarProp "xmobar -x 1 ~/.config/xmobar/xmobarrc" (pure xmobarPP)
+barSpawner 2 = pure $ statusBarProp "xmobar -x 2 ~/.config/xmobar/xmobarrc" (pure xmobarPP)
 #+END_SRC
 
 * StartupHook
@@ -125,7 +124,7 @@ myStartupHook = do
   spawnOnce "nm-applet &"
   spawnOnce "volumeicon &"
   spawnOnce "conky -c $HOME/.config/conky/xmonad/doom-one-01.conkyrc"
-  spawnOnce "trayer --edge top --align right --widthtype request --padding 6 --SetDockType true       --SetPartialStrut true --expand true --monitor 1 --transparent true --alpha 0 --tint 0x282c34  --height 22 &"
+  spawnOnce "trayer --edge top --align right --widthtype request --padding 6 --SetDockType true --SetPartialStrut true --expand true --monitor 1 --transparent true --alpha 0 --tint 0x282c34 --height 22 &"
   spawnOnce "feh --no-fehbg --bg-fill -z ~/.config/wallpaper/*"  -- feh set random wallpaper
 #+END_SRC
 
@@ -376,7 +375,7 @@ myKeymap = [
 * Main
 This is the "main" of XMonad. This where everything in our configs comes together and works.
 #+BEGIN_SRC haskell
-myConfig = ewmh $ docks $ def {
+myConfig = def {
     manageHook = myManageHook <+> manageDocks,
     --keys = \c -> mkKeymap c myKeymap,
     modMask = myModMask,
@@ -386,10 +385,10 @@ myConfig = ewmh $ docks $ def {
     workspaces = myWorkspaces,
     borderWidth = myBorderWidth,
     normalBorderColor = myNormColor,
-    focusedBorderColor = myFocusColor,
-    logHook = dynamicLogWithPP $ filterOutWsPP [scratchpadWorkspaceTag] xmobarPP
-    --  $ dynamicEasySBs barSpawner
+    focusedBorderColor = myFocusColor
+    -- logHook = dynamicLogWithPP $ filterOutWsPP [scratchpadWorkspaceTag] xmobarPP
     } `additionalKeysP` myKeymap
+
 main :: IO ()
-main = do xmonad $ myConfig
+main = xmonad $ dynamicSBs barSpawner . ewmh . docks $ myConfig
 #+END_SRC
