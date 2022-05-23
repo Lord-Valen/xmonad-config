@@ -30,10 +30,7 @@ import XMonad.Hooks.StatusBar.PP (filterOutWsPP)
 --import XMonad.Hooks.StatusBar
 
 -- Layouts
-import XMonad.Layout.Accordion
 import XMonad.Layout.GridVariants (Grid(Grid))
-import XMonad.Layout.SimplestFloat
-import XMonad.Layout.Spiral
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.Tabbed
 import XMonad.Layout.ThreeColumns
@@ -51,7 +48,6 @@ import XMonad.Layout.Spacing
 import XMonad.Layout.SubLayouts
 import XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
 import XMonad.Layout.WindowNavigation
-import qualified XMonad.Layout.ToggleLayouts as T (toggleLayouts, ToggleLayout(Toggle))
 import qualified XMonad.Layout.MultiToggle as MT (Toggle(..))
 
 -- Utilities
@@ -149,9 +145,6 @@ monocle  = renamed [Replace "monocle"]
            $ addTabs shrinkText myTabTheme
            $ subLayout [] (smartBorders Simplest)
            $ limitWindows 20 Full
-floats   = renamed [Replace "floats"]
-           $ smartBorders
-           $ limitWindows 20 simplestFloat
 grid     = renamed [Replace "grid"]
            $ smartBorders
            $ windowNavigation
@@ -161,13 +154,6 @@ grid     = renamed [Replace "grid"]
            $ mySpacing 8
            $ mkToggle (single MIRROR)
            $ Grid (16/10)
-spirals  = renamed [Replace "spirals"]
-           $ smartBorders
-           $ windowNavigation
-           $ addTabs shrinkText myTabTheme
-           $ subLayout [] (smartBorders Simplest)
-           $ mySpacing' 8
-           $ spiral (6/7)
 threeCol = renamed [Replace "threeCol"]
            $ smartBorders
            $ windowNavigation
@@ -188,10 +174,6 @@ threeRow = renamed [Replace "threeRow"]
 tabs     = renamed [Replace "tabs"]
                 -- I cannot add spacing to this layout because it will add spacing between window and tabs which looks bad.
        $ tabbed shrinkText myTabTheme
-tallAccordion = renamed [Replace "tallAccordion"]
-                Accordion
-wideAccordion = renamed [Replace "wideAccordion"]
-                $ Mirror Accordion
 
 -- setting colors for tabs layout and tabs sublayout.
 myTabTheme = def {
@@ -214,7 +196,7 @@ myShowWNameTheme = def {
   }
 
 -- The layout hook
-myLayoutHook = avoidStruts $ mouseResize $ windowArrange $ T.toggleLayouts floats $ mkToggle (NBFULL ?? NOBORDERS ?? EOT) myDefaultLayout
+myLayoutHook = avoidStruts $ mouseResize $ windowArrange $ mkToggle (NBFULL ?? NOBORDERS ?? EOT) myDefaultLayout
   where
     myDefaultLayout = withBorder myBorderWidth tall
                       ||| noBorders monocle
@@ -222,10 +204,6 @@ myLayoutHook = avoidStruts $ mouseResize $ windowArrange $ T.toggleLayouts float
                       ||| grid
                       ||| threeCol
                       ||| threeRow
-                      ||| tallAccordion
-                      ||| wideAccordion
-                      ||| floats
-                      ||| spirals
 
 myWorkspaces = [" sys ", " doc ", " www ", " dev ", " cht ", " vms ", " mus ", " vid ", " gfx "]
 myWorkspaceIndices = M.fromList $ zip myWorkspaces [1..]
@@ -288,7 +266,6 @@ myKeymap = [
   ("M-S-<KP_Subtract>", shiftTo Prev nonNSP >> moveTo Prev nonNSP),  -- Shifts focused window to prev ws
 
   -- KB_GROUP Floating windows
-  ("M-f", sendMessage (T.Toggle "floats")), -- Toggles my 'floats' layout
   ("M-t", withFocused $ windows . W.sink), -- Push floating window back to tile
   ("M-S-t", sinkAll),                       -- Push ALL floating windows to tile
 
@@ -349,14 +326,6 @@ myKeymap = [
   ("M-a f", spawn (myEmacs ++ ("--eval '(elfeed)'"))), -- elfeed
   ("M-a w", spawn (myEmacs ++ ("--eval '(eww)'"))), -- emacs web wowser
   ("M-a i", spawn (myEmacs ++ ("--eval '(circe)'"))), -- emacs irc client
-  {-
-  ,
-  ("M-a b", spawn (myEmacs ++ ("--eval '(ibuffer)'"))), -- list buffers
-  ("M-a d", spawn (myEmacs ++ ("--eval '(dired nil)'"))), -- dired
-  ("M-a m", spawn (myEmacs ++ ("--eval '(mastodon)'"))), -- mastodon.el
-  ("M-a v", spawn (myEmacs ++ ("--eval '(+vterm/here nil)'"))), -- vterm
-  ("M-a a", spawn (myEmacs ++ ("--eval '(emms)' --eval '(emms-play-directory-tree \"~/Music/\")'")))
-  -}
 
   -- KB_GROUP XF86
   ("<XF86AudioMute>", spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle"),
