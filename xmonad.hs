@@ -26,7 +26,7 @@ import XMonad.Hooks.EwmhDesktops  -- for some fullscreen events, also for xcompo
 import XMonad.Hooks.ManageDocks (avoidStruts, docks, manageDocks, ToggleStruts(..))
 import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat, doCenterFloat)
 import XMonad.Hooks.StatusBar
-import XMonad.Hooks.StatusBar.PP (filterOutWsPP, xmobarPP, dynamicLogWithPP)
+import XMonad.Hooks.StatusBar.PP
 
 -- Layouts
 import XMonad.Layout.GridVariants (Grid(Grid))
@@ -55,6 +55,28 @@ import XMonad.Util.NamedScratchpad
 import XMonad.Util.Run (runProcessWithInput, safeSpawn, spawnPipe)
 import XMonad.Util.SpawnOnce
 
+-- doom-one
+colorBack = "#282c34"
+colorFore = "#bbc2cf"
+color01 = "#1c1f24"
+color02 = "#ff6c6b"
+color03 = "#98be65"
+color04 = "#da8548"
+color05 = "#51afef"
+color06 = "#c678dd"
+color07 = "#5699af"
+color08 = "#202328"
+color09 = "#5b6268"
+color10 = "#da8548"
+color11 = "#4db5bd"
+color12 = "#ecbe7b"
+color13 = "#3071db"
+color14 = "#a9a1e1"
+color15 = "#46d9ff"
+color16 = "#dfdfdf"
+
+-- doom-outrun-electric
+
 myFont :: String
 myFont = "xft:Inconsolata Nerd Font Mono:regular:size=9:antialias=true:hinting=true"
 
@@ -80,19 +102,38 @@ myBorderWidth :: Dimension
 myBorderWidth = 2
 
 myNormColor :: String
-myNormColor = "#282c34"   -- Border color of normal windows
+myNormColor = colorBack -- Border color of normal windows
 
 myFocusColor :: String
-myFocusColor  = "#46d9ff"   -- Border color of focused windows
+myFocusColor  = color15 -- Border color of focused windows
 
 windowCount :: X (Maybe String)
 windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
 
 -- Status Bar
+myPP = def { ppCurrent = xmobarColor color06 "" . wrap ("<box type=Bottom width=2 mb=2 color=" ++ color06 ++ ">") "</box>"
+             -- Visible but not current workspace
+           , ppVisible = xmobarColor color06 "" . clickable
+             -- Hidden workspace
+           , ppHidden = xmobarColor color05 "" . wrap ("<box type=Top width=2 mt=2 color=" ++ color05 ++ ">") "</box>" . clickable
+             -- Hidden workspaces (no windows)
+           , ppHiddenNoWindows = xmobarColor color05 "" . clickable
+             -- Title of active window
+           , ppTitle = xmobarColor color16 "" . shorten 60
+             -- Separator character
+           , ppSep = "<fc=" ++ color09 ++ "> <fn=1>|</fn> </fc>"
+             -- Urgent workspace
+           , ppUrgent = xmobarColor color02 "" . wrap "!" "!"
+             -- Adding # of windows on current workspace to the bar
+           , ppExtras = [windowCount]
+             -- order of things in xmobar
+           , ppOrder = \(ws:l:t:ex) -> [ws,l]++ex++[t]
+           }
+
 barSpawner :: ScreenId -> IO StatusBarConfig
-barSpawner 0 = pure $ statusBarProp "xmobar -x 0 ~/.config/xmobar/xmobarrc" (pure xmobarPP)
-barSpawner 1 = pure $ statusBarProp "xmobar -x 1 ~/.config/xmobar/xmobarrc" (pure xmobarPP)
-barSpawner 2 = pure $ statusBarProp "xmobar -x 2 ~/.config/xmobar/xmobarrc" (pure xmobarPP)
+barSpawner 0 = pure $ statusBarProp "xmobar -x 0 ~/.config/xmobar/xmobarrc" (pure myPP)
+barSpawner 1 = pure $ statusBarProp "xmobar -x 1 ~/.config/xmobar/xmobarrc" (pure myPP)
+barSpawner 2 = pure $ statusBarProp "xmobar -x 2 ~/.config/xmobar/xmobarrc" (pure myPP)
 
 myStartupHook :: X ()
 myStartupHook = do
@@ -102,8 +143,7 @@ myStartupHook = do
   spawnOnce "xscreensaver -no-splash"
   spawnOnce "nm-applet &"
   spawnOnce "volumeicon &"
-  spawnOnce "conky -c $HOME/.config/conky/xmonad/doom-one-01.conkyrc"
-  spawnOnce "trayer --edge top --align right --widthtype request --padding 6 --SetDockType true --SetPartialStrut true --expand true --monitor 1 --transparent true --alpha 0 --tint 0x282c34 --height 30 &"
+  spawnOnce $ "trayer --edge top --align right --widthtype request --padding 6 --SetDockType true --SetPartialStrut true --expand true --monitor 1 --transparent true --alpha 0 --tint " ++ colorBack ++ " --height 30 &"
   spawnOnce "feh --no-fehbg --bg-fill -z ~/.config/wallpaper/*"  -- feh set random wallpaper
 
 myScratchPads :: [NamedScratchpad]
@@ -177,12 +217,12 @@ tabs     = renamed [Replace "tabs"]
 -- setting colors for tabs layout and tabs sublayout.
 myTabTheme = def {
   fontName = myFont,
-  activeColor         = "#46d9ff",
-  inactiveColor       = "#313846",
-  activeBorderColor   = "#46d9ff",
-  inactiveBorderColor = "#282c34",
-  activeTextColor     = "#282c34",
-  inactiveTextColor   = "#d0d0d0"
+  activeColor         = color15,
+  inactiveColor       = colorBack,
+  activeBorderColor   = color15,
+  inactiveBorderColor = colorBack,
+  activeTextColor     = colorBack,
+  inactiveTextColor   = colorFore
   }
 
 -- Theme for showWName which prints current workspace when you change workspaces.
