@@ -59,28 +59,28 @@ myFont :: String
 myFont = "xft:Inconsolata Nerd Font Mono:regular:size=9:antialias=true:hinting=true"
 
 myModMask :: KeyMask
-myModMask = mod4Mask        -- Sets modkey to super key
+myModMask = mod4Mask
 
 myRunPrompt :: String
 myRunPrompt = "rofi -show run"
 
 myTerminal :: String
-myTerminal = "kitty"    -- Sets default terminal
+myTerminal = "kitty"
 
 myBrowser :: String
-myBrowser = "brave "  -- Sets qutebrowser as browser
+myBrowser = "brave "
 
 myEmacs :: String
-myEmacs = "emacsclient -c -a 'emacs' "  -- Makes emacs keybindings easier to type
+myEmacs = "emacsclient -c -a 'emacs' "
 
 myEditor :: String
-myEditor = "emacsclient -c -a 'emacs' "  -- Sets emacs as editor
+myEditor = "emacsclient -c -a 'emacs' "
 
 myBorderWidth :: Dimension
-myBorderWidth = 2           -- Sets border width for windows
+myBorderWidth = 2
 
 myNormColor :: String
-myNormColor   = "#282c34"   -- Border color of normal windows
+myNormColor = "#282c34"   -- Border color of normal windows
 
 myFocusColor :: String
 myFocusColor  = "#46d9ff"   -- Border color of focused windows
@@ -103,7 +103,7 @@ myStartupHook = do
   spawnOnce "nm-applet &"
   spawnOnce "volumeicon &"
   spawnOnce "conky -c $HOME/.config/conky/xmonad/doom-one-01.conkyrc"
-  spawnOnce "trayer --edge top --align right --widthtype request --padding 6 --SetDockType true --SetPartialStrut true --expand true --monitor 1 --transparent true --alpha 0 --tint 0x282c34 --height 22 &"
+  spawnOnce "trayer --edge top --align right --widthtype request --padding 6 --SetDockType true --SetPartialStrut true --expand true --monitor 1 --transparent true --alpha 0 --tint 0x282c34 --height 30 &"
   spawnOnce "feh --no-fehbg --bg-fill -z ~/.config/wallpaper/*"  -- feh set random wallpaper
 
 myScratchPads :: [NamedScratchpad]
@@ -135,8 +135,8 @@ tall     = renamed [Replace "tall"]
            $ windowNavigation
            $ addTabs shrinkText myTabTheme
            $ subLayout [] (smartBorders Simplest)
-           $ limitWindows 12
-           $ mySpacing 8
+           $ limitWindows 6
+           $ mySpacing' 6
            $ ResizableTall 1 (3/100) (1/2) []
 monocle  = renamed [Replace "monocle"]
            $ smartBorders
@@ -150,7 +150,7 @@ grid     = renamed [Replace "grid"]
            $ addTabs shrinkText myTabTheme
            $ subLayout [] (smartBorders Simplest)
            $ limitWindows 12
-           $ mySpacing 8
+           $ mySpacing' 6
            $ mkToggle (single MIRROR)
            $ Grid (16/10)
 threeCol = renamed [Replace "threeCol"]
@@ -269,10 +269,10 @@ myKeymap = [
   ("M-S-t", sinkAll),                       -- Push ALL floating windows to tile
 
   -- KB_GROUP Increase/decrease spacing (gaps)
-  ("C-M1-m", decScreenSpacing 4),         -- Decrease screen spacing
-  ("C-M1-n", decWindowSpacing 4),         -- Decrease window spacing
-  ("C-M1-e", incWindowSpacing 4),         -- Increase window spacing
-  ("C-M1-i", incScreenSpacing 4),         -- Increase screen spacing
+  ("C-M1-m", decScreenSpacing 2),         -- Decrease screen spacing
+  ("C-M1-n", decWindowSpacing 2),         -- Decrease window spacing
+  ("C-M1-e", incWindowSpacing 2),         -- Increase window spacing
+  ("C-M1-i", incScreenSpacing 2),         -- Increase screen spacing
 
   -- KB_GROUP Windows navigation
   ("M-m", windows W.focusMaster),  -- Move focus to the master window
@@ -347,7 +347,6 @@ myConfig = def {
     borderWidth = myBorderWidth,
     normalBorderColor = myNormColor,
     focusedBorderColor = myFocusColor
-    -- logHook = dynamicLogWithPP $ filterOutWsPP [scratchpadWorkspaceTag] xmobarPP
     } `additionalKeysP` myKeymap
 
 main :: IO ()
