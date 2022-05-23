@@ -24,8 +24,9 @@ import qualified Data.Map as M
 -- Hooks
 import XMonad.Hooks.DynamicLog (dynamicLogWithPP, wrap, xmobarPP, xmobarColor, shorten, PP(..))
 import XMonad.Hooks.EwmhDesktops  -- for some fullscreen events, also for xcomposite in obs.
-import XMonad.Hooks.ManageDocks (avoidStruts, docksEventHook, manageDocks, ToggleStruts(..))
+import XMonad.Hooks.ManageDocks (avoidStruts, docks, manageDocks, ToggleStruts(..))
 import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat, doCenterFloat)
+import XMonad.Hooks.StatusBar.PP (filterOutWsPP)
 --import XMonad.Hooks.StatusBar
 
 -- Layouts
@@ -40,7 +41,6 @@ import XMonad.Layout.ThreeColumns
 -- Layouts modifiers
 import XMonad.Layout.LayoutModifier
 import XMonad.Layout.LimitWindows (limitWindows, increaseLimit, decreaseLimit)
-import XMonad.Layout.Magnifier
 import XMonad.Layout.MultiToggle (mkToggle, single, EOT(EOT), (??))
 import XMonad.Layout.MultiToggle.Instances (StdTransformers(NBFULL, MIRROR, NOBORDERS))
 import XMonad.Layout.NoBorders
@@ -104,6 +104,7 @@ myStartupHook = do
   return () >> checkKeymap myConfig myKeymap
   spawnOnce "lxsession &"
   spawnOnce "picom &"
+  spawnOnce "xscreensaver -no-splash"
   spawnOnce "nm-applet &"
   spawnOnce "volumeicon &"
   spawnOnce "conky -c $HOME/.config/conky/xmonad/doom-one-01.conkyrc"
@@ -139,15 +140,6 @@ tall     = renamed [Replace "tall"]
            $ windowNavigation
            $ addTabs shrinkText myTabTheme
            $ subLayout [] (smartBorders Simplest)
-           $ limitWindows 12
-           $ mySpacing 8
-           $ ResizableTall 1 (3/100) (1/2) []
-magnify  = renamed [Replace "magnify"]
-           $ smartBorders
-           $ windowNavigation
-           $ addTabs shrinkText myTabTheme
-           $ subLayout [] (smartBorders Simplest)
-           $ magnifier
            $ limitWindows 12
            $ mySpacing 8
            $ ResizableTall 1 (3/100) (1/2) []
@@ -225,7 +217,6 @@ myShowWNameTheme = def {
 myLayoutHook = avoidStruts $ mouseResize $ windowArrange $ T.toggleLayouts floats $ mkToggle (NBFULL ?? NOBORDERS ?? EOT) myDefaultLayout
   where
     myDefaultLayout = withBorder myBorderWidth tall
-                      ||| magnify
                       ||| noBorders monocle
                       ||| noBorders tabs
                       ||| grid
@@ -377,10 +368,9 @@ myKeymap = [
     nonEmptyNonNSP  = WSIs (return (\ws -> isJust (W.stack ws) && W.tag ws /= "NSP"))
 -- END_KEYS
 
-myConfig = ewmh def {
+myConfig = ewmh $ docks $ def {
     manageHook = myManageHook <+> manageDocks,
     --keys = \c -> mkKeymap c myKeymap,
-    handleEventHook = docksEventHook,
     modMask = myModMask,
     terminal = myTerminal,
     startupHook = myStartupHook,
@@ -389,7 +379,7 @@ myConfig = ewmh def {
     borderWidth = myBorderWidth,
     normalBorderColor = myNormColor,
     focusedBorderColor = myFocusColor,
-    logHook = dynamicLogWithPP $ namedScratchpadFilterOutWorkspacePP xmobarPP
+    logHook = dynamicLogWithPP $ filterOutWsPP [scratchpadWorkspaceTag] xmobarPP
     --  $ dynamicEasySBs barSpawner
     } `additionalKeysP` myKeymap
 main :: IO ()
