@@ -131,6 +131,9 @@ myFocusColor  = color15 -- Border color of focused windows
 windowCount :: X (Maybe String)
 windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
 
+colorTrayer :: String
+colorTrayer = "--tint " ++ "0x" ++ tail colorBack
+
 -- Status Bar
 myPP = def { ppCurrent = xmobarColor color06 ""
                          . wrap ("<box type=Bottom width=2 mb=2 color=" ++ color06 ++ ">") "</box>"
@@ -168,7 +171,7 @@ myStartupHook = do
   spawnOnce "xscreensaver -no-splash"
   spawnOnce "nm-applet &"
   spawnOnce "volumeicon &"
-  spawnOnce $ "trayer --edge top --align right --widthtype request --padding 6 --SetDockType true --SetPartialStrut true --expand true --monitor 1 --transparent true --alpha 0 --tint " ++ colorBack ++ " --height 30 &"
+  spawnOnce $ "trayer --edge top --align right --widthtype request --padding 6 --SetDockType true --SetPartialStrut true --expand true --monitor 1 --transparent true --alpha 0 " ++ colorTrayer ++ " --height 30 &"
   spawnOnce "feh --no-fehbg --bg-fill -z ~/.config/wallpaper/*"  -- feh set random wallpaper
 #+END_SRC
 * Scratchpads
