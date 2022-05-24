@@ -78,42 +78,42 @@ import XMonad.Util.SpawnOnce
 {-
 colorBack = "#282c34" --bg
 colorFore = "#bbc2cf" --fg
-color01 = "#1c1f24" --base1
-color02 = "#ff6c6b" --red
-color03 = "#98be65" --green
-color04 = "#da8548" --orange
-color05 = "#51afef" --blue
-color06 = "#c678dd" --magenta
-color07 = "#5699af" --dark-cyan
-color08 = "#202328" --base2
-color09 = "#5b6268" --base5
-color10 = "#da8548" --orange
-color11 = "#4db5bd" --teal
-color12 = "#ecbe7b" --yellow
-color13 = "#2257a0" --dark-blue
-color14 = "#a9a1e1" --violet
-color15 = "#46d9ff" --cyan
-color16 = "#dfdfdf" --base8
+color0 = "#1c1f24" --base1
+color1 = "#ff6c6b" --red
+color2 = "#98be65" --green
+color3 = "#da8548" --orange
+color4 = "#51afef" --blue
+color5 = "#c678dd" --magenta
+color6 = "#5699af" --dark-cyan
+color7 = "#202328" --base2
+color8 = "#5b6268" --base5
+color9 = "#da8548" --orange
+color10 = "#4db5bd" --teal
+color11 = "#ecbe7b" --yellow
+color12 = "#2257a0" --dark-blue
+color13 = "#a9a1e1" --violet
+color14 = "#46d9ff" --cyan
+color15 = "#dfdfdf" --base8
 -}
 -- doom-outrun-electric
 colorBack = "#0c0a20" --bg
 colorFore = "#f2f3f7" --fg
-color01 = "#1f1147" --base1
-color02 = "#e61f44" --red
-color03 = "#a7da1e" --green
-color04 = "#cf433e" --orange
-color05 = "#1ea8fc" --blue
-color06 = "#ff2afc" --magenta
-color07 = "#204052" --dark-cyan
-color08 = "#110d26" --base2
-color09 = "#ba45a3" --base5
-color10 = "#cf433e" --orange
-color11 = "#a875ff" --teal
-color12 = "#ffd400" --yellow
-color13 = "#3f88ad" --dark-blue
-color14 = "#df85ff" --violet
-color15 = "#42c6ff" --cyan
-color16 = "#919ad9" --base8
+color0 = "#1f1147" --base1
+color1 = "#e61f44" --red
+color2 = "#a7da1e" --green
+color3 = "#cf433e" --orange
+color4 = "#1ea8fc" --blue
+color5 = "#ff2afc" --magenta
+color6 = "#204052" --dark-cyan
+color7 = "#110d26" --base2
+color8 = "#ba45a3" --base5
+color9 = "#cf433e" --orange
+color10 = "#a875ff" --teal
+color11 = "#ffd400" --yellow
+color12 = "#3f88ad" --dark-blue
+color13 = "#df85ff" --violet
+color14 = "#42c6ff" --cyan
+color15 = "#919ad9" --base8
 #+end_src
 * Variables
 #+BEGIN_SRC haskell
@@ -145,7 +145,7 @@ myNormColor :: String
 myNormColor = colorBack -- Border color of normal windows
 
 myFocusColor :: String
-myFocusColor  = color15 -- Border color of focused windows
+myFocusColor  = color14 -- Border color of focused windows
 
 windowCount :: X (Maybe String)
 windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
@@ -154,21 +154,21 @@ colorTrayer :: String
 colorTrayer = "--tint " ++ "0x" ++ tail colorBack
 
 -- Status Bar
-myPP = def { ppCurrent = xmobarColor color06 ""
-                         . wrap ("<box type=Bottom width=2 mb=2 color=" ++ color06 ++ ">") "</box>"
+myPP = def { ppCurrent = xmobarColor color5 ""
+                         . wrap ("<box type=Bottom width=2 mb=2 color=" ++ color5 ++ ">") "</box>"
              -- Visible but not current workspace
-           , ppVisible = xmobarColor color06 ""
+           , ppVisible = xmobarColor color5 ""
              -- Hidden workspace
-           , ppHidden = xmobarColor color05 ""
-                        . wrap ("<box type=Top width=2 mt=2 color=" ++ color05 ++ ">") "</box>"
+           , ppHidden = xmobarColor color4 ""
+                        . wrap ("<box type=Top width=2 mt=2 color=" ++ color4 ++ ">") "</box>"
              -- Hidden workspaces (no windows)
-           , ppHiddenNoWindows = xmobarColor color05 ""
+           , ppHiddenNoWindows = xmobarColor color4 ""
              -- Title of active window
-           , ppTitle = xmobarColor color16 "" . shorten 60
+           , ppTitle = xmobarColor color15 "" . shorten 60
              -- Separator character
-           , ppSep = "<fc=" ++ color09 ++ "> <fn=1>|</fn> </fc>"
+           , ppSep = "<fc=" ++ color8 ++ "> <fn=1>|</fn> </fc>"
              -- Urgent workspace
-           , ppUrgent = xmobarColor color02 "" . wrap "!" "!"
+           , ppUrgent = xmobarColor color1 "" . wrap "!" "!"
              -- Adding # of windows on current workspace to the bar
            , ppExtras = [windowCount]
              -- order of things in xmobar
@@ -268,9 +268,9 @@ tabs     = renamed [Replace "tabs"]
 -- setting colors for tabs layout and tabs sublayout.
 myTabTheme = def {
   fontName = myFont,
-  activeColor         = color15,
+  activeColor         = color14,
   inactiveColor       = colorBack,
-  activeBorderColor   = color15,
+  activeBorderColor   = color14,
   inactiveBorderColor = colorBack,
   activeTextColor     = colorBack,
   inactiveTextColor   = colorFore
