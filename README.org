@@ -75,26 +75,45 @@ import XMonad.Util.SpawnOnce
 * Colors
 #+begin_src haskell
 -- doom-one
-colorBack = "#282c34"
-colorFore = "#bbc2cf"
-color01 = "#1c1f24"
-color02 = "#ff6c6b"
-color03 = "#98be65"
-color04 = "#da8548"
-color05 = "#51afef"
-color06 = "#c678dd"
-color07 = "#5699af"
-color08 = "#202328"
-color09 = "#5b6268"
-color10 = "#da8548"
-color11 = "#4db5bd"
-color12 = "#ecbe7b"
-color13 = "#3071db"
-color14 = "#a9a1e1"
-color15 = "#46d9ff"
-color16 = "#dfdfdf"
-
+{-
+colorBack = "#282c34" --bg
+colorFore = "#bbc2cf" --fg
+color01 = "#1c1f24" --base1
+color02 = "#ff6c6b" --red
+color03 = "#98be65" --green
+color04 = "#da8548" --orange
+color05 = "#51afef" --blue
+color06 = "#c678dd" --magenta
+color07 = "#5699af" --dark-cyan
+color08 = "#202328" --base2
+color09 = "#5b6268" --base5
+color10 = "#da8548" --orange
+color11 = "#4db5bd" --teal
+color12 = "#ecbe7b" --yellow
+color13 = "#2257a0" --dark-blue
+color14 = "#a9a1e1" --violet
+color15 = "#46d9ff" --cyan
+color16 = "#dfdfdf" --base8
+-}
 -- doom-outrun-electric
+colorBack = "#0c0a20" --bg
+colorFore = "#f2f3f7" --fg
+color01 = "#1f1147" --base1
+color02 = "#e61f44" --red
+color03 = "#a7da1e" --green
+color04 = "#cf433e" --orange
+color05 = "#1ea8fc" --blue
+color06 = "#ff2afc" --magenta
+color07 = "#204052" --dark-cyan
+color08 = "#110d26" --base2
+color09 = "#ba45a3" --base5
+color10 = "#cf433e" --orange
+color11 = "#a875ff" --teal
+color12 = "#ffd400" --yellow
+color13 = "#3f88ad" --dark-blue
+color14 = "#df85ff" --violet
+color15 = "#42c6ff" --cyan
+color16 = "#919ad9" --base8
 #+end_src
 * Variables
 #+BEGIN_SRC haskell
@@ -171,7 +190,7 @@ myStartupHook = do
   spawnOnce "xscreensaver -no-splash"
   spawnOnce "nm-applet &"
   spawnOnce "volumeicon &"
-  spawnOnce $ "trayer --edge top --align right --widthtype request --padding 6 --SetDockType true --SetPartialStrut true --expand true --monitor 1 --transparent true --alpha 0 " ++ colorTrayer ++ " --height 30 &"
+  spawnOnce $ "killall trayer; trayer --edge top --align right --widthtype request --padding 6 --SetDockType true --SetPartialStrut true --expand true --monitor 1 --transparent true --alpha 0 " ++ colorTrayer ++ " --height 30 &"
   spawnOnce "feh --no-fehbg --bg-fill -z ~/.config/wallpaper/*"  -- feh set random wallpaper
 #+END_SRC
 * Scratchpads
